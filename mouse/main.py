@@ -1,14 +1,14 @@
-import mouse
-from mouse import MoveEvent
-import keyboard
 import json
+import keyboard
+import mouse
 import os
 import os.path as p
+from mouse import MoveEvent
 from os.path import join as pj
 from pathlib import Path
 from timeit import default_timer as timer
 
-from famgz_utils import json_, countdown, print, timeit, f_time
+from ..utils import json_, countdown, print, timeit, f_time
 
 source_dir = Path(__file__).resolve().parent
 data_dir = pj(source_dir, 'data')

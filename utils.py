@@ -1,13 +1,13 @@
-import sys
-import os
-import os.path as p
-import subprocess as sp
 import json
+import os
 import requests
+import subprocess as sp
+import sys
+from bs4 import BeautifulSoup
 from os.path import join as pj
 from pathlib import Path
 from time import sleep
-from bs4 import BeautifulSoup
+
 from .config import print
 
 
@@ -155,7 +155,7 @@ def json_(path,
         for i in checks:
             suffix = '' if i == 1 else f'({i})'
             bak_path = f'{file_path}{suffix}.bak'
-            if not p.isfile(bak_path):
+            if not os.path.isfile(bak_path):
                 shutil.move(file_path, bak_path)
                 saved = True
                 break
@@ -197,7 +197,7 @@ def log_txt(path, new=None, dupe=False):
     Read or write *.txt files based on `new` is given or not.
     <dupe> allows duplicate entries to be written
     '''
-    if not p.isfile(path):  # File not found, no need to check duplicates
+    if not os.path.isfile(path):  # File not found, no need to check duplicates
         if new:
             with open(path, 'a', encoding='utf-8') as f:
                 f.write(str(new) + '\n')
