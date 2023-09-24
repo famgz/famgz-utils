@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open('src/famgz_utils/requirements.txt') as f:
+with open('requirements.txt') as f:
     REQUIREMENTS = f.readlines()
 
 setup(
