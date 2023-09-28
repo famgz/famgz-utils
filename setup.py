@@ -11,11 +11,7 @@ setup(
     author_email='famgz@proton.me',
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
-    # entry_points={
-        # 'console_scripts': [
-            # 'famgz_utils = famgz_utils.__main__:main'
-        # ]
-    # },
+    include_package_data=True,
     url='https://github.com/famgz/famgz_utils',
     install_requires=REQUIREMENTS
 )

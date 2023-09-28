@@ -8,17 +8,17 @@ from os.path import join as pj
 from pathlib import Path
 from timeit import default_timer as timer
 
-from ..time_ import countdown, timeit, f_time
-from ..utils import json_, print
+from .time_ import countdown, timeit, f_time
+from .utils import json_, print
 
 source_dir = Path(__file__).resolve().parent
-data_dir = pj(source_dir, 'data')
+mm_dir = pj(source_dir, 'mouse_movements')
 
 
 def save_in_json(events):
     for i in range(1, 1001):
         i = str(i).zfill(3)
-        path = pj(data_dir, f'{i}.json')
+        path = pj(mm_dir, f'{i}.json')
         if not p.isfile(path):
             with open(path, 'w') as f:
                 json.dump(events, f)
@@ -49,10 +49,10 @@ def load_mouse_event(n=1, max_dur=None):
     Max duration is an aproximation.
     '''
     from random import choice, randint
-    files = [file for file in os.listdir(data_dir) if file.endswith('.json')]
+    files = [file for file in os.listdir(mm_dir) if file.endswith('.json')]
     for _ in range(n):
         file = choice(files)
-        path = pj(data_dir, file)
+        path = pj(mm_dir, file)
         assert p.isfile(path)
         raw_events = json_(path)
         offset = randint(0, 10)

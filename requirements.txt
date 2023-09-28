@@ -1,6 +1,7 @@
 beautifulsoup4
 cinemagoer
 keyboard
+mouse
 numpy
 Pillow
 pycountry
