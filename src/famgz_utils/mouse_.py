@@ -9,7 +9,7 @@ from pathlib import Path
 from timeit import default_timer as timer
 
 from .time_ import countdown, timeit, f_time
-from .utils import json_, print
+from .misc import json_, print
 
 source_dir = Path(__file__).resolve().parent
 mm_dir = pj(source_dir, 'mouse_movements')

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from time import sleep
 from timeit import default_timer as timer
 
-from .utils import print
+from .misc import print
 
 _timezone_in_sec = time.timezone
 
@@ -99,22 +99,26 @@ def add_months(sourcedate, months):
 
 def date_to_timestamp(*x):
     '''
-    Expected input (in order):
-    Mandatory: year, month, day.
-    Optional:  hour, minute, seconds, mseconds.
+    Expected inputs (in order):
+        Mandatory: year, month, day
+        Complete:  year, month, day, hour, minute, seconds, mseconds
     '''
-    t =  datetime(*x).timestamp()  # input in integers
+    t = datetime(*x).timestamp()  # input in integers
     return int(t)
 
 
-def split_utc_date(t):
+def split_utc_date(t, return_ts=False):
     ''' Expects t in format: <2022-04-30T17:00:00.000Z> '''
-    date_, time_ = t.strip('Z').split('T')
+    t = t.replace('+', '.').strip('Z')
+    date_, time_ = t.split('T')
     time_, *_, = time_.split('.')
     year, month, day = date_.split('-')
     hour, minute, second = time_.split(':')
-    # print(year, month, day, hour, minute, second)`
-    return [int(x) for x in (year, month, day, hour, minute, second)]
+    # print(year, month, day, hour, minute, second)
+    items = [int(x) for x in (year, month, day, hour, minute, second)]
+    if return_ts:
+        return date_to_timestamp(*items)
+    return items
 
 
 def ldap_to_timestamp(x, add_timezone=True):
@@ -168,39 +172,49 @@ def min_duration(wait):
 
 def f_time(t1, diff=None, out='single', decimal=0):
     '''
-    Formats a given timestamp interval `diff` if given
-    or calculate it based on t1 and current time
+    Format timestamp to strings
+    If no `diff` is given will calculate current time minus t1
     '''
     diff = diff if (diff or diff == 0) else (time.time() - t1)
+
+    signal = '-' if diff < 0 else ''
+
+    diff = abs(diff)
 
     m, s = divmod(diff, 60)
     h, m = divmod(m,  60)
     d, h = divmod(h,  24)
+    M, d = divmod(d, 30)
+    Y, M = divmod(M, 12)
 
-    d, h, m = int(d), int(h), int(m)
+    Y, M, d, h, m = int(Y), int(M), int(d), int(h), int(m)
 
     s = int(s) if decimal==0 else round(s, decimal)
 
-    fd = f'{d}d' if d else 0  # day
-    fh = f'{h}h' if h else 0  # hour
-    fm = f'{m}m' if m else 0  # minute
+    fY = f'{Y}Y' if Y else 0     # year
+    fM = f'{M}M' if M else 0     # month
+    fd = f'{d}d' if d else 0     # day
+    fh = f'{h}h' if h else 0     # hour
+    fm = f'{m}m' if m else 0     # minute
     fs = f'{s}s' if s else '0s'  # second
 
     # example: 2d 20h 0m 50s (diff=244850)
-    return {
+    string = {
         # '2d'
-        'single':  fd or fh or fm or fs,
+        'single':  fY or fM or fd or fh or fm or fs,
         # '2d 20h 50s'
-        'partial':  ' '.join([f'{x}{y}' for x, y in ((d,'d'),(h,'h'),(m,'m'),(s,'s'),) if x]) or '0s',
+        'partial':  ' '.join([f'{x}{y}' for x, y in ((Y,'Y'),(M,'M'),(d,'d'),(h,'h'),(m,'m'),(s,'s'),) if x]) or '0s',
         # ' 2d 20h     50s'
-        'partial2': ' '.join([f'{x:>2}{y}' if x else '   ' for x, y in ((d,'d'),(h,'h'),(m,'m'),(s,'s'),)]),
+        'partial2': ' '.join([f'{x:>2}{y}' if x else '   ' for x, y in ((Y,'Y'),(M, 'M'),(d,'d'),(h,'h'),(m,'m'),(s,'s'),)]),
         # ' 2d 20h  0m 50s'
-        'full':     ' '.join([f'{x:>2}{y}'                 for x, y in ((d,'d'),(h,'h'),(m,'m'),(s,'s'),)]),
+        'full':     ' '.join([f'{x:>2}{y}'                 for x, y in ((Y,'Y'),(M, 'M'),(d,'d'),(h,'h'),(m,'m'),(s,'s'),)]),
         # (2, 20, 0, 50)
-        'sep_raw': (d, h, m, s),
+        'sep_raw': (Y, M, d, h, m, s),
         # ('2d', '20h', None, '50s')
-        'sep': (fd, fh, fm, fs)
+        'sep': (fY, fM, fd, fh, fm, fs)
     }[out]
+
+    return signal + string
 
 
 def countdown(t, clear=False):

@@ -1,12 +1,14 @@
-from .utils import print, json_
-from .time_ import now
 from pathlib import Path
+
+from .misc import print, json_
+from .time_ import now, f_time
+
 
 
 class Cookies:
 
     def __init__(self, folder_path):
-        self.folder_path = folder_path
+        self.folder_path = Path(folder_path)
 
         self.cookies_txt_paths = []
         self.cookies_json_paths = []
@@ -130,3 +132,29 @@ class Cookies:
         if display:
             print(f'{len(expired)} cookies: {" ".join(expired)}')
         return expired
+
+    def print_cookies(self):
+        now_ = now()
+        for filename, cookies in self.cookies.items():
+            print(f'\n[bright_blue]{filename}')
+            max_key_len = max( [len(key) for key in cookies] )
+            max_key_len = min(30, max_key_len)
+            max_value_len = 50
+            print(f'   {"KEY":<{max_key_len}} {"EXPIRES IN"} {"VALUE":^{max_value_len}}')
+            for i, (key, data) in enumerate(cookies.items()):
+                # expirationDate
+                remaining = f_remaining = '-'
+                expired = False
+                if data["expirationDate"]:
+                    remaining = data["expirationDate"] - now_
+                    if remaining < 0:
+                        expired = True
+                    f_remaining = f_time(None, diff=remaining, out='single')
+                date_color = '[white]' if not expired else '[red]'
+
+                # value
+                value = data['value']
+                suffix = '' if len(value) <= max_value_len else '...'
+                value = value[:max_value_len] + suffix
+
+                print(f'[bright_black]{i+1:<3}[white]{key[:max_key_len]:<{max_key_len}} {date_color}{f_remaining:^10} [bright_black]{value}')
