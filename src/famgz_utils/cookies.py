@@ -7,8 +7,8 @@ from .time_ import now, f_time
 
 class Cookies:
 
-    def __init__(self, folder_path):
-        self.folder_path = Path(folder_path)
+    def __init__(self, folder_path='cookies'):
+        self.folder_path = Path(folder_path).resolve()
 
         self.cookies_txt_paths = []
         self.cookies_json_paths = []
@@ -124,24 +124,41 @@ class Cookies:
         ]
         return expired
 
-    def check_expired_cookies(self, display=False):
+    def check_expired_cookies(self, display=True):
+        if not self.cookies:
+            return False
+        valid = []
         expired = []
         for filename, cookies in self.cookies.items():
             if self.get_expired_keys(cookies):
                 expired.append(filename)
+            else:
+                valid.append(filename)
         if display:
-            print(f'{len(expired)} cookies: {" ".join(expired)}')
+            print(f'[red]{len(expired)} expired cookies: [white]{" ".join(expired)}') if expired else ...
+            print(f'[green]{len(valid)} valid cookies: [white]{" | ".join(valid)}') if valid else ...
         return expired
 
     def print_cookies(self):
+        sep = f'[bright_black]{"─"*100}'
         now_ = now()
         for filename, cookies in self.cookies.items():
             print(f'\n[bright_blue]{filename}')
+            print(sep)
             max_key_len = max( [len(key) for key in cookies] )
             max_key_len = min(30, max_key_len)
             max_value_len = 50
             print(f'   {"KEY":<{max_key_len}} {"EXPIRES IN"} {"VALUE":^{max_value_len}}')
+            print(sep)
             for i, (key, data) in enumerate(cookies.items()):
+                # key
+                suffix = ''
+                if len(key) <= max_key_len:
+                    key = key[:max_key_len]
+                else:
+                    key = key[:max_key_len-3]
+                key = key + suffix
+
                 # expirationDate
                 remaining = f_remaining = '-'
                 expired = False
