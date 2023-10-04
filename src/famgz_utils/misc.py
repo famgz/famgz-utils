@@ -62,12 +62,20 @@ def func_name(n=0):
     return sys._getframe(n + 1).f_code.co_name
 
 
-def is_valid_uuid(val):
+def is_valid_uuid(string):
     import uuid
     try:
-        uuid.UUID(str(val))
+        uuid.UUID(str(string))
         return True
     except ValueError:
+        return False
+
+
+def is_valid_b64(string):
+    try:
+        base64.b64decode(string + '===')
+        return True
+    except:
         return False
 
 
