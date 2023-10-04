@@ -5,6 +5,7 @@ mouse
 numpy
 Pillow
 pycountry
+pyjwt
 pymediainfo
 requests
 rich
