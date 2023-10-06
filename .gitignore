@@ -1,11 +1,11 @@
+.trash
+
 auth.txt
 downloader.py
 uploader.py
 widevine.py
 requirements_uploader.txt
 mkv_tag.xml
-
-.trash
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
