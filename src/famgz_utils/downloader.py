@@ -29,7 +29,8 @@ def downloader(
         kid_audio=1,
         kid_video=1,
         delete_raw=True,
-        check_url=True
+        check_url=True,
+        debug=False
     ) -> bool:
 
     '''
@@ -100,7 +101,10 @@ def downloader(
                      '--disable-ipv6=true '
                      '--allow-unplayable-formats '
                      '--no-check-certificates '
-                    f'{drm}-f bestvideo[height<={max_res}]+bestaudio[acodec!=opus] "{mpd_link}" -o "{slug}" -P "{WORKING_DIR}"'
+                    f'{drm}-f bestvideo[height<={max_res}]+bestaudio[acodec!=opus] '
+                    f'"{mpd_link}" '
+                    f'-o "{slug}" '
+                    f'-P "{WORKING_DIR}"'
         )
         video = [x for x in WORKING_DIR.iterdir() if x.name.startswith(slug) and x.suffix == '.mp4']
         audio = [x for x in WORKING_DIR.iterdir() if x.name.startswith(slug) and x.suffix == '.m4a']
@@ -200,6 +204,14 @@ def downloader(
 
     if bad_url():
         return False
+
+    if debug:
+        global QUIET_DOWNLOAD
+        global QUIET_DECRYPT
+        global QUIET_REMUX
+        QUIET_DOWNLOAD = False
+        QUIET_DECRYPT = False
+        QUIET_REMUX = False
 
     check_wvkey()
 
