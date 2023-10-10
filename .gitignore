@@ -1,6 +1,5 @@
 .trash
 
-src/famgz_utils/private.py
 private.py
 auth.txt
 requirements_uploader.txt
