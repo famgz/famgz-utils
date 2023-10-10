@@ -1,6 +1,7 @@
 .trash
 
-private/
+src/famgz_utils/private.py
+private.py
 auth.txt
 requirements_uploader.txt
 mkv_tag.xml

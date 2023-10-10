@@ -459,6 +459,9 @@ def clean_name(x, dot=True):
 def translate_(x, source='auto', target='en', title=True):
     # from googletrans import Translator
     # translator = Translator()
+    if not x and not isinstance(x, str):
+        print(f'Invalid input: {x}')
+        return ''
     from deep_translator import GoogleTranslator
     try:
         x = GoogleTranslator(source=source, target=target).translate(x)
