@@ -34,7 +34,7 @@ def file_audio_lang(mkv_path):
     from pymediainfo import MediaInfo
     import pycountry
     mi = MediaInfo.parse(mkv_path)
-    # check is there is audio
+    # check if there is audio
     if len(mi.audio_tracks) > 0:
         audio_lang = mi.audio_tracks[0].language
         # check if lang is not 'und'
@@ -180,13 +180,13 @@ def check_imdb_poster(imdb_id):
             input('[imdb_poster] Press any key\n>')
         else:
             img_url = movie['full-size cover url']
-            scaled_img_url = img_url  #.replace('.jpg', '._V1_FMjpg_UY1200_.jpg')
-            ar = get_image_info(scaled_img_url, ar=True)
+            # img_url = img_url.replace('.jpg', '._V1_FMjpg_UY1200_.jpg')  # get the image with 1200px height
+            ar = get_image_info(img_url, ar=True)
             if ar:
                 if ar > 1:
                     print('[imdb_poster] Poster ok')
                 elif ar <= 1:
-                    print(f"[imdb_poster] Image has bad ratio:\n{scaled_img_url}")
+                    print(f"[imdb_poster] Image has bad ratio:\n{img_url}")
                     input('[imdb_poster] Press any key\n>')
             else:
                 print("[imdb_poster] Can't access image info")
@@ -221,7 +221,7 @@ def get_imdb_contrib(url, cookies, get_id=False):
         'Accept-Language': 'en-US,en;q=0.9',
     }
     r = requests.get(url, cookies=cookies, headers=headers)
-    assert r.ok  # it doesn't matter
+    assert r.ok  # no effect
     page = BeautifulSoup(r.content, 'lxml')
     imdb_link = page.select_one('a.a-size-large.a-link-normal')
     if imdb_link:
