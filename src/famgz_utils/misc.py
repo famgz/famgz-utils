@@ -64,6 +64,7 @@ def func_name(n=0):
 
 def is_valid_uuid(string):
     import uuid
+    string = str(string)
     try:
         uuid.UUID(str(string))
         return True
