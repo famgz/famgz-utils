@@ -71,12 +71,23 @@ def is_valid_uuid(string):
         return False
 
 
-def is_valid_b64(string):
+def is_valid_b64(s):
+    return bool(decodeb64(s))
+
+
+def decodeb64(s):
     try:
-        base64.b64decode(string + '===')
-        return True
+        return base64.b64decode(s + '===')
     except:
-        return False
+        return None
+
+
+def encodeb64(s):
+    s = str(s)
+    message_bytes = s.encode('ascii')
+    base64_bytes = base64.b64encode(message_bytes)
+    base64_message = base64_bytes.decode('ascii')
+    return base64_message
 
 
 def format_real(x):
