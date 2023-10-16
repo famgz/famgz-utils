@@ -308,7 +308,7 @@ def get_vimeo_mpd(info, headers={}):  # info might be link or id
             return mpd_link
 
 
-def open_selenium(headless=True, user_data_dir=None):
+def open_selenium(headless=True, user_data_dir=None, use_brave=True):
     import shlex
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
@@ -317,21 +317,25 @@ def open_selenium(headless=True, user_data_dir=None):
     os_user = get_current_os_user()
 
     brave_path = 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
+    chrome_path = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+
+    exe_path = brave_path if use_brave else chrome_path
+
     user_data_dir = user_data_dir or 'C:\\chromedriver\\chrome' or f'C:\\Users\\{os_user}\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data'
 
     # Setting the driver
     if headless is False:
-        cmd = f'"{brave_path}" --remote-debugging-port=8888 --user-data-dir="{user_data_dir}" "about:blank"'
+        cmd = f'"{exe_path}" --remote-debugging-port=8888 --user-data-dir="{user_data_dir}" "about:blank"'
         # print(cmd)
         sp.Popen(shlex.split(cmd))
     opt = Options()
     opt.headless = headless
     if headless is True:
         opt.add_experimental_option('excludeSwitches', ['enable-logging'])
-        opt.binary_location = brave_path
+        opt.binary_location = exe_path
     if headless is False:
         opt.add_experimental_option("debuggerAddress", "localhost:8888")
-    opt.add_argument(f'--user-data-dir="{user_data_dir}"')
+    opt.add_argument(f'--user-data-dir={user_data_dir}')
 
     s = Service('C:\\chromedriver\\chromedriver.exe')
 
