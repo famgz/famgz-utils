@@ -137,7 +137,7 @@ def json_(path,
     # file does not exist
     if not file_path.exists():
         file_existed = False
-        print(f'\[json_][yellow]file does not exists: {file_path}{" creating it..." if create_file or new is not _null else ""}')
+        print(f'[bright_black]\[json_]file does not exists: {file_path}{" creating it..." if create_file or new is not _null else ""}')
         if create_file and new is _null:
             # create file with empty dict {}
             with open(file_path, 'w', encoding=write_encoding) as f:
