@@ -214,6 +214,8 @@ def f_time(t1, diff=None, out='single', decimal=0):
         'sep': (fY, fM, fd, fh, fm, fs)
     }[out]
 
+    if out in ('sep', 'sep_raw'):
+        return string
     return signal + string
 
 
